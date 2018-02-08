@@ -1,0 +1,52 @@
+version: "3"
+services:
+
+  mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+       MYSQL_ROOT_PASSWORD: root
+       MYSQL_DATABASE: app
+       MYSQL_USER: app
+       MYSQL_PASSWORD: app
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    networks:
+      - desafio-tecnico
+  php:
+    build:
+      context: ./deploy
+    image: williamsilva808:php-fpm
+    container_name: application
+    depends_on:
+      - mysql
+    command: bash -c "composer install && php-fpm"
+    environment:
+      DB_HOST: 'mysql'
+      DB_PORT: '3306'
+      DB_DATABASE: 'desafio-tecnico'
+      DB_USERNAME: 'app'
+      DB_PASSWORD: 'app'
+      DEBUG: 'true'
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - desafio-tecnico
+
+  web:
+    image: nginx:alpine
+    container_name: nginx
+    depends_on:
+      - php
+    volumes:
+      - ./:/var/www/html
+      - ./deploy/config/default:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    networks:
+      - desafio-tecnico
+networks:
+  desafio-tecnico:
+    driver: bridge
