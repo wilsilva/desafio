@@ -17,7 +17,7 @@ class CreateBuyersTable extends Migration
             $table->increments('id');
             $table->integer('client_id')->unsigned();
             $table->string('name', 70);
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('cpf',11);
             $table->timestamps();
 

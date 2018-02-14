@@ -6,18 +6,15 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ValidateCreditCard extends TestCase
+class PaymentTest extends TestCase
 {
     /**
      * A basic test example.
      *
      * @return void
      */
-    public function testExample()
+    public function testPaymentWithCreditCard()
     {
-        $response = $this->get('/');
-        $response->assertStatus(200);
-
         $this->assertTrue(true);
     }
 }

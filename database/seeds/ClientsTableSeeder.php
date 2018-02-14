@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use DesafioTecnicoMoip\Client;
 
-class DatabaseSeeder extends Seeder
+class ClientsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +12,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         $this->call(ClientsTableSeeder::class);
+        $client = new Client;
+        $client->id = 1;
+        $client->save();
     }
 }

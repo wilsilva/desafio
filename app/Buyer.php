@@ -8,6 +8,7 @@ use DesafioTecnicoMoip\Client;
 class Buyer extends Model
 {
     //
+    protected $hidden = ['cpf'];
 
     public function client(){
         return $this->belongsTo(Client::class, 'client_id');

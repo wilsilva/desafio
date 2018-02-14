@@ -16,3 +16,8 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/cards/validate', 'CardController@validateCard');
+Route::post('/cards/token', 'CardController@generateToken');
+
+Route::post('/buyers','BuyerController@create');
