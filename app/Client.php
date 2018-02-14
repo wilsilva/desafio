@@ -8,7 +8,7 @@ class Client extends Model
 {
     //
 
-    public function buyers(){
+    public function buyer(){
         return $this->hasMany(Buyer::class, 'client_id');
     }
 }

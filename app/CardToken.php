@@ -10,7 +10,7 @@ use phpseclib\Crypt\RSA;
 class CardToken extends Model
 {
     //
-    protected $hidden = ['private_token'];
+    protected $hidden = ['private_token', 'id'];
 
     public function generateToken(){
         

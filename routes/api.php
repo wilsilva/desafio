@@ -21,3 +21,8 @@ Route::post('/cards/validate', 'CardController@validateCard');
 Route::post('/cards/token', 'CardController@generateToken');
 
 Route::post('/buyers','BuyerController@create');
+
+
+Route::post('/payments/creditcard', 'PaymentController@paymentWithCreditCard');
+Route::post('/payments/boleto', 'PaymentController@paymentWithBoleto');
+Route::get('/payments/status', 'PaymentController@statusPayment');

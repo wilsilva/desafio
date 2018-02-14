@@ -14,12 +14,11 @@ class CreateBoletosTable extends Migration
     public function up()
     {
         Schema::create('boletos', function (Blueprint $table) {
-            $table->integer('id')->unsigned();
+            $table->increments('id');
             $table->integer('payment_id')->unsigned();
             $table->unsignedBigInteger('number');
             $table->timestamps();
-
-            $table->primary(['id','payment_id']);
+            
             $table->foreign('payment_id')
                 ->references('id')->on('payments');
         });
