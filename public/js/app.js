@@ -13590,7 +13590,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-module.exports = __webpack_require__(36);
+module.exports = __webpack_require__(39);
 
 
 /***/ }),
@@ -13598,9 +13598,9 @@ module.exports = __webpack_require__(36);
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-__webpack_require__(41);
-__webpack_require__(42);
-__webpack_require__(43);
+__webpack_require__(36);
+__webpack_require__(37);
+__webpack_require__(38);
 
 $(function () {
   $('.cpf').mask('000.000.000-00', { reverse: true });
@@ -35792,16 +35792,6 @@ module.exports = function spread(callback) {
 /* 36 */
 /***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */,
-/* 41 */
-/***/ (function(module, exports) {
-
 $("#newBuyer").on('submit', function (event) {
 
   var name = $("#newBuyer").find("#name").val();
@@ -35832,7 +35822,7 @@ $("#newBuyer").on('submit', function (event) {
 });
 
 /***/ }),
-/* 42 */
+/* 37 */
 /***/ (function(module, exports) {
 
 $("#card_number").on('change', function () {
@@ -35841,6 +35831,8 @@ $("#card_number").on('change', function () {
   $.post('/api/cards/token', { 'buyer_id': sessionStorage.getItem('buyer_id') }, function (data) {
 
     var token = data.token.public_token;
+    sessionStorage.setItem('token', token);
+
     var options = {
       default_public_exponent: '65537'
     };
@@ -35848,11 +35840,12 @@ $("#card_number").on('change', function () {
     var encrypt = new JSEncrypt(options);
     encrypt.setPublicKey(token);
 
-    var encrypted = encrypt.encrypt(cardNumber);
+    var cardEncrypted = encrypt.encrypt(cardNumber);
 
-    $.post('/api/cards/validate', { 'buyer_id': sessionStorage.getItem('buyer_id'), 'credit_card': btoa(encrypted) }).then(function (data) {
+    $.post('/api/cards/validate', { 'buyer_id': sessionStorage.getItem('buyer_id'), 'credit_card': btoa(cardEncrypted) }).then(function (data) {
 
       if (data.valid) {
+        sessionStorage.setItem('cardIsValid', data.valid);
         $('#card_number').removeClass('is-invalid');
         $('#card_number').addClass('is-valid');
         $('#card-brand').attr('src', data.image);
@@ -35870,6 +35863,26 @@ $("#card_number").on('change', function () {
 
 $("#payment-card").submit(function (event) {
   event.preventDefault();
+
+  if (!sessionStorage.getItem('cardIsValid')) {
+    toastr.error('Favor informar um cartão de crédito válido.');
+    return false;
+  }
+
+  if (!sessionStorage.getItem('token')) {
+    toastr.error('Falha ao processar o pagamento.');
+  }
+
+  var options = {
+    default_public_exponent: '65537'
+  };
+
+  var encrypt = new JSEncrypt(options);
+  encrypt.setPublicKey(sessionStorage.getItem('token'));
+
+  var cardEncrypted = btoa(encrypt.encrypt($("#payment-card").find("#card_number").val()));
+  var cvvEncrypted = btoa(encrypt.encrypt($("#payment-card").find("#cvv").val()));
+
   var payment = {};
   payment.card = {};
 
@@ -35877,9 +35890,9 @@ $("#payment-card").submit(function (event) {
   payment.type = 'card';
   payment.buyer_id = sessionStorage.getItem('buyer_id');
   payment.card.holder_name = $("#payment-card").find("#holder_name").val();
-  payment.card.card_number = $("#payment-card").find("#card_number").val();
+  payment.card.card_number = cardEncrypted;
   payment.card.expiration_date = $("#payment-card").find("#expiration_date").val();
-  payment.card.cvv = $("#payment-card").find("#cvv").val();
+  payment.card.cvv = cvvEncrypted;
 
   $.post('/api/payments/creditcard', payment).then(function (data) {
     sessionStorage.setItem('payment_id', data.payment.id);
@@ -35893,12 +35906,10 @@ $("#payment-card").submit(function (event) {
       });
     }
   });
-
-  console.log(payment);
 });
 
 /***/ }),
-/* 43 */
+/* 38 */
 /***/ (function(module, exports) {
 
 
@@ -35958,6 +35969,12 @@ $(function () {
 		});
 	}
 });
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

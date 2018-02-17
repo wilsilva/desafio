@@ -31,11 +31,9 @@ class CardController extends Controller {
 
 		if ($cardValidated['valid']) {
 			$imgPath = public_path('img/creditcards/' . $cardValidated['type'] . '.png');
-
 			$imgData = file_get_contents($imgPath);
 			$type = pathinfo($imgPath, PATHINFO_EXTENSION);
 			$imgbase64 = 'data:image/' . $type . ';base64,' . base64_encode($imgData);
-
 			$cardValidated['image'] = $imgbase64;
 		}
 
