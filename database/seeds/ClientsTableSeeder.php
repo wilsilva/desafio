@@ -12,8 +12,10 @@ class ClientsTableSeeder extends Seeder
      */
     public function run()
     {
-        $client = new Client;
-        $client->id = 1;
-        $client->save();
+        if(empty(Client::find(1))){
+          $client = new Client;
+          $client->id = 1;
+          $client->save();
+        }
     }
 }
