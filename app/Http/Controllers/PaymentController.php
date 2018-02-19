@@ -17,14 +17,21 @@ class PaymentController extends Controller {
 		$payment->buyer_id = $request->input('buyer_id');
 		$payment->type = $request->input('type');
 		$payment->amount = $request->input('amount');
-		$payment->save();
 
 		$card = new Card;
 		$card->holder_name = $request->input('card.holder_name');
 		$card->card_number = $request->input('card.card_number');
 		$card->expiration_date = $request->input('card.expiration_date');
 		$card->cvv = $request->input('card.cvv');
-		$card->save();
+
+		if ($card->isValid($payment->buyer_id)) {
+			$payment->save();
+			$card->save();
+		} else {
+			return response()->json([
+				'error' => 'O cartão informado não é válido.',
+			], 402);
+		}
 
 		$payment->card()->attach($card);
 
