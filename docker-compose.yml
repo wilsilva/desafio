@@ -28,6 +28,10 @@ services:
       DB_USERNAME: 'root'
       DB_PASSWORD: 'root'
       DEBUG: 'true'
+      APP_NAME: 'Desafio Moip'
+      APP_ENV: 'local'
+      APP_KEY: 'base64:QP0aa72cv89ppuyR+yS1+E0qd3fBSSYnUNUy+nCzJ8E='
+      APP_URL: 'http://localhost'
     volumes:
       - ./:/var/www/html
     networks:
