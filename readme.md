@@ -1,4 +1,4 @@
-## Desafio Técnico Moip
+## Desafio Técnico
 
 ### Stacks Utilizadas
 - PHP 7
